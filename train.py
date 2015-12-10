@@ -4,7 +4,7 @@ from theano.tensor.nnet import conv
 from theano.tensor.signal import downsample
 from collections import OrderedDict
 import numpy as np
-import cv2 as cv
+
 import cPickle
 import gzip
 
