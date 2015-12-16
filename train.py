@@ -10,16 +10,28 @@ import gzip
 
 floatX = theano.config.floatX
 
+<<<<<<< HEAD
 train_set, test_set = cPickle.load(gzip.open('nao_densa_massa_560tr_500te_512px_original.pkl.gz', 'rb'))
+=======
+train_set, test_set = cPickle.load(gzip.open('nao_densa_massa_560tr_500te_768px_original.pkl.gz', 'rb'))
+>>>>>>> d1ecd98649bbe1ab02899756f8788571f42da0a7
 
 train_x,train_y = train_set
 test_x,test_y = test_set
 
+<<<<<<< HEAD
 train_x = train_x.reshape(560, 262144)
 train_y = train_y.reshape(560, 238144)
 
 test_x = test_x.reshape(1, 262144)
 test_y = test_y.reshape(1, 238144)
+=======
+train_x = train_x.reshape(560, 589824)
+train_y = train_y.reshape(560, 553536)
+
+test_x = test_x.reshape(1, 589824)
+test_y = test_y.reshape(1, 553536)
+>>>>>>> d1ecd98649bbe1ab02899756f8788571f42da0a7
 
 
 def shared(X):
@@ -31,8 +43,13 @@ def batch_iterator(x, y, batch_size):
     for i in xrange(num_batches):
         first = i * batch_size
         last  = (i+1) * batch_size
+<<<<<<< HEAD
         x_batch = x[first:last].reshape((batch_size, 1, 512, 512))
         y_batch = y[first:last].reshape((batch_size, 1, 488, 488))
+=======
+        x_batch = x[first:last].reshape((batch_size, 1, 768, 768))
+        y_batch = y[first:last].reshape((batch_size, 1, 744, 744))
+>>>>>>> d1ecd98649bbe1ab02899756f8788571f42da0a7
         yield (x_batch, y_batch)
 
 
@@ -84,8 +101,13 @@ W1, b1, O1, GT1 = convolutional_pooling_relu(16, 32, 7, O0, GT0)
 W2, b2, O2, GT2 = convolutional_relu(32, 16, 3, O1, GT1)
 W3, b3, O3, cost = convolutional_sig(16, 1, 1, O2, GT2)
 
+<<<<<<< HEAD
 x = np.ones((1, 1, 512, 512)).astype(floatX)
 y = np.ones((1, 1, 488, 488)).astype(floatX)
+=======
+x = np.ones((1, 1, 768, 768)).astype(floatX)
+y = np.ones((1, 1, 744, 744)).astype(floatX)
+>>>>>>> d1ecd98649bbe1ab02899756f8788571f42da0a7
 
 FCNN = theano.function([X, Y], [O3, cost])
 o, c = FCNN(x, y)
@@ -102,7 +124,7 @@ updates = OrderedDict(updates)
 
 trainer = theano.function([X,Y], cost, updates=updates)
 
-num_epochs = 1000
+num_epochs = 2
 
 for i in range(1, num_epochs):
     print('-'*10)
