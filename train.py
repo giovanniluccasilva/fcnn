@@ -10,16 +10,16 @@ import gzip
 
 floatX = theano.config.floatX
 
-train_set, test_set = cPickle.load(gzip.open('nao_densa_massa_500tr_500te_256px_original.pkl.gz', 'rb'))
+train_set, test_set = cPickle.load(gzip.open('nao_densa_massa_560tr_500te_768px_original.pkl.gz', 'rb'))
 
 train_x,train_y = train_set
 test_x,test_y = test_set
 
-train_x = train_x.reshape(500, 65536)
-train_y = train_y.reshape(500, 53824)
+train_x = train_x.reshape(560, 589824)
+train_y = train_y.reshape(560, 553536)
 
-test_x = test_x.reshape(1, 65536)
-test_y = test_y.reshape(1, 53824)
+test_x = test_x.reshape(1, 589824)
+test_y = test_y.reshape(1, 553536)
 
 
 def shared(X):
@@ -31,8 +31,8 @@ def batch_iterator(x, y, batch_size):
     for i in xrange(num_batches):
         first = i * batch_size
         last  = (i+1) * batch_size
-        x_batch = x[first:last].reshape((batch_size, 1, 256, 256))
-        y_batch = y[first:last].reshape((batch_size, 1, 232, 232))
+        x_batch = x[first:last].reshape((batch_size, 1, 768, 768))
+        y_batch = y[first:last].reshape((batch_size, 1, 744, 744))
         yield (x_batch, y_batch)
 
 
@@ -84,8 +84,8 @@ W1, b1, O1, GT1 = convolutional_pooling_relu(16, 32, 7, O0, GT0)
 W2, b2, O2, GT2 = convolutional_relu(32, 16, 3, O1, GT1)
 W3, b3, O3, cost = convolutional_sig(16, 1, 1, O2, GT2)
 
-x = np.ones((1, 1, 256, 256)).astype(floatX)
-y = np.ones((1, 1, 232, 232)).astype(floatX)
+x = np.ones((1, 1, 768, 768)).astype(floatX)
+y = np.ones((1, 1, 744, 744)).astype(floatX)
 
 FCNN = theano.function([X, Y], [O3, cost])
 o, c = FCNN(x, y)
@@ -102,12 +102,12 @@ updates = OrderedDict(updates)
 
 trainer = theano.function([X,Y], cost, updates=updates)
 
-num_epochs = 1000
+num_epochs = 2
 
 for i in range(1, num_epochs):
     print('-'*10)
     print('Epoch: {}'.format(i))
-    for iter, b in enumerate(batch_iterator(train_x, train_y, 5)):
+    for iter, b in enumerate(batch_iterator(train_x, train_y, 1)):
         x = b[0]
         y = b[1]
         last_cost = trainer(x, y)
