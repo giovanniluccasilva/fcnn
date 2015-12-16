@@ -102,7 +102,7 @@ updates = OrderedDict(updates)
 
 trainer = theano.function([X,Y], cost, updates=updates)
 
-num_epochs = 2
+num_epochs = 1000
 
 for i in range(1, num_epochs):
     print('-'*10)
